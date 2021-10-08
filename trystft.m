@@ -1,4 +1,4 @@
-function [X,f,t] = trystft(x,w,H,K,fs) %x, win, hop, nfft, fs
+function [X,f,t] = trystft(x,w,H,K,fs)
 
 % Returns the STFT matrix and the corresponding frequency and time vectors
 
