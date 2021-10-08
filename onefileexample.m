@@ -2,8 +2,6 @@
 close all
 format short g
 
-% dir = ["\A\A1","\A\A2","\B\B1","\C\C1","\C\C2","\D\D1","\D\D2","\E\E1","\E\E2"];
-% for ii = 1:length(dir)
 [x, fs] = audioread(".\Mosquito sound files_13.09.2021\5\5M.wav");
 
 x = x(:, 1);                        % get the first channel
@@ -19,12 +17,6 @@ win = blackman(wlen, 'periodic');
 C = sum(win)/wlen;
 
 S = abs(S)/wlen/C;
-
-% if rem(nfft, 2)                     % odd nfft excludes Nyquist point
-%     S(2:end, :) = S(2:end, :).*2;
-% else                                % even nfft includes Nyquist point
-%     S(2:end-1, :) = S(2:end-1, :).*2;
-% end
 
 S = 20*log10(S + 1e-6);
 
@@ -52,12 +44,13 @@ power = power(1:ind);
 sgf_sm = sgolayfilt(power, 1, 3501);                        
 
 runavg = movmean(sgf_sm,2000);
-% runavg = sgf_sm;
+
 [peak_values,indexes_of_peaks] = findpeaks(runavg,'Npeaks',5,'MinPeakDistance',5000,'SortStr','descend');
 
-% if length(peak_values) == 5
-%     [peak_values,indexes_of_peaks] = checkpeaks (runavg,peak_values,indexes_of_peaks);
-% end
+if length(peak_values) == 5
+     [peak_values,indexes_of_peaks] = checkpeaks (runavg,peak_values,indexes_of_peaks);
+end
+
 figure(2);plot(ff,runavg,'-r',ff(indexes_of_peaks),peak_values,'b.', 'MarkerSize', 20,'LineWidth',1);
 xlabel('Frequency, Hz')
 ylabel('Power')
@@ -78,7 +71,7 @@ catch
     indexes_of_valleys = [indexes_of_valleys, find(runavg == min(runavg(sorted_index_of_peaks(end):length(runavg))))];    
 end
 
-% % figure(2);hold on;plot(ff(indexes_of_valleys),runavg(indexes_of_valleys),'b.', 'MarkerSize', 20);title("peaks")
+% figure(2);hold on;plot(ff(indexes_of_valleys),runavg(indexes_of_valleys),'b.', 'MarkerSize', 20);title("peaks")
 
 fwhm_indexes = [];
 fwhm_start_freq = [];
@@ -138,9 +131,8 @@ arr = [sorted_peak_freq',mean_window_peak_freqs',fwhm',fwhm_start_freq',fwhm_end
 t = array2table(arr);
 t.Properties.VariableNames(1:7) = {'FFT peak freq','Window peak freq','Full Width Half Maximum','FWHM starting freq','FWHM ending freq','FFT peak values', 'Window peak values'};
 disp(t);
-% % filename = "testfile.csv";
-% % f = fopen(filename,'w');
-% % fclose(f);
-% % writetable(t,filename);
-% 
-% % end
+
+% filename = "results.csv";
+% f = fopen(filename,'w');
+% fclose(f);
+% writetable(t,filename);
