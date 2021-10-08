@@ -1,4 +1,4 @@
-function [total_peak_freq,total_peak_values] = windowpeaks(x,M,H,K,fs,npeaks,dft_peak_freq)%,fvectl)
+function [total_peak_freq,total_peak_values] = windowpeaks(x,M,H,K,fs,npeaks,dft_peak_freq)
 
 % Returns 2 matrices, having the peak frequency and its magnitude for each
 % window
